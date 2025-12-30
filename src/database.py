@@ -23,7 +23,7 @@ def init_db():
 
     print ("Database initialized")
 
-def getDBConnection():
+def get_db_connection():
     conn = sqlite3.connect('finance.db')
     conn.row_factory = sqlite3.Row
     return conn
