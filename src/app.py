@@ -1,8 +1,10 @@
 from flask import Flask, jsonify
 
-from database import getDBConnection
+from database import get_db_connection, init_db
 
 app = Flask (__name__)
+
+init_db()
 
 @app.route('/')
 def index():
@@ -15,9 +17,9 @@ def get_expenses():
 
     conn.close()
 
-    expensesList = []
+    expenses_list = []
     for expense in expenses:
-        expensesList.append({
+        expenses_list.append({
             'id': expense['id'],
             'amount': expense['amount'],
             'category': expense['category'],
@@ -26,7 +28,7 @@ def get_expenses():
             'created_at': expense['created_at']
         })
 
-    return jsonify(expensesList)
+    return jsonify(expenses_list)
 
 if __name__ == '__main__':
     print("Starting server...")
