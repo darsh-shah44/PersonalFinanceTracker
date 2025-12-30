@@ -25,7 +25,7 @@ def init_db():
 
 def getDBConnection():
     conn = sqlite3.connect('finance.db')
-    conn.row_factory = sqlite3()
+    conn.row_factory = sqlite3.Row
     return conn
 
 if __name__ == '__main__':
