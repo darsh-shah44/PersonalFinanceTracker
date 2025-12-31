@@ -1,14 +1,16 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from datetime import date, datetime
 from database import get_db_connection, init_db
+import os
 
-app = Flask (__name__)
+template_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates')
+app = Flask(__name__, template_folder=template_dir)
 
 init_db()
 
 @app.route('/')
 def index():
-    return "Welcome to the Finance Tracker App!"
+    return render_template('index.html')
 @app.route('/api/expenses', methods=['GET'])
 def get_expenses():
     conn = get_db_connection()
