@@ -77,6 +77,38 @@ def delete_expense(expense_id):
 
      return jsonify({'message': 'Expense deleted successfully'}), 200
 
+@app.route('/api/expenses/<int:expense_id>', methods=['PUT'])
+def update_expense(expense_id):
+     data = request.get_json()
+
+     amount = data.get('amount')
+     category = data.get('category')
+     description = data.get('description', '')
+     date = data.get('date')
+
+     if not amount or not category or not date:
+          return jsonify({'Error': 'Missing required fields'}), 400
+     
+     conn = get_db_connection()
+     cursor = conn.cursor()
+
+     expense = cursor.execute('SELECT * FROM expenses WHERE id = ?', (expense_id,)).fetchone()
+
+     if expense is None:
+          conn.close()
+          return jsonify({'error': 'Expense not found'}), 404
+     
+     cursor.execute('''
+        UPDATE expenses
+        SET amount = ?, category = ?, description = ?, date = ?
+        WHERE id = ?
+        ''', (amount, category, description, date, expense_id))
+
+     conn.commit()
+     conn.close()
+
+     return jsonify({'message': 'Expense updated successfully'}), 200
+
 if __name__ == '__main__':
     print("Starting server...")
     app.run(debug=True)
