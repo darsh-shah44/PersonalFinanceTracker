@@ -19,4 +19,38 @@ async function loadExpenses() {
     })
 }
 
-document.addEventListener('DOMContentLoaded', loadExpenses);
+async function addExpense(event){
+    event.preventDefault();
+    
+    const amount = document.getElementById('amount').value;
+    const category = document.getElementById('category').value;
+    const description = document.getElementById('description').value;
+    const date = document.getElementById('date').value;
+
+    const response = await fetch('/api/expenses', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            amount: parseFloat(amount),
+            category: category,
+            description: description,
+            date: date
+        })
+    });
+
+    if(response.ok){
+        console.log('Expense added successfully');
+        document.getElementById('expense-form').reset();
+        loadExpenses();
+    }
+    else{
+        console.error('Failed to add expense');
+        alert('Error adding expense');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+    loadExpenses();
+    document.getElementById('expense-form').addEventListener('submit', addExpense);
+});
