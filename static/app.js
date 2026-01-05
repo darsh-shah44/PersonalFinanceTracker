@@ -13,7 +13,7 @@ async function loadExpenses() {
             <td>${expense.date}</td>
             <td>${expense.category}</td>
             <td>${expense.description}</td>
-            <td><button>Delete</button></td>
+            <td><button onclick="deleteExpense(${expense.id})">Delete</button></td>
         `;
         tbody.appendChild(row);
     })
@@ -47,6 +47,27 @@ async function addExpense(event){
     else{
         console.error('Failed to add expense');
         alert('Error adding expense');
+    }
+}
+
+async function deleteExpense(id){
+    if(!confirm('Are you sure you want to delete?')) {
+        return;
+    }
+
+    console.log('Deleting expense with id:', id);
+
+    const response = await fetch(`/api/expenses/${id}`, {
+        method: 'DELETE'
+    });
+
+    if (response.ok){
+        console.log('Expense deleted successfully');
+        loadExpenses();
+    }
+    else{
+        console.error('Failed to delete expense');
+        alert('Error deleting expense');
     }
 }
 
